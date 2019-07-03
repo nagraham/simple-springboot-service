@@ -16,6 +16,14 @@ java -jar target/simple-springboot-service-1.0-SNAPSHOT.jar
 
 Test it:
 
+Create a user
+
 ```
-curl http://localhost:8080/user/123; echo;
+curl -d '{"id":"user1234", "name": "Han Solo", "age": 32}' -H "Content-Type: application/json" -X PUT http://localhost:8080/user/user1234; echo;
+```
+
+Get the user
+
+```
+curl http://localhost:8080/user/user1234; echo;
 ```

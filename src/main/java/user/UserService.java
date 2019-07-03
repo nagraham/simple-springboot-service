@@ -1,5 +1,6 @@
 package user;
 
 public interface UserService {
-    User getById(String id);
+    User createOrUpdate(User user);
+    User get(String id);
 }

@@ -5,6 +5,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,11 +25,27 @@ class UserServiceImplTest {
     private UserService userService = new UserServiceImpl();
 
     @Test
-    void getById_whenUserExists_callsUserRepository() {
-        when(mockUserRepository.get(TEST_ID)).thenReturn(TEST_USER);
+    void get_whenUserExists_callsUserRepository() {
+        when(mockUserRepository.findById(TEST_ID)).thenReturn(Optional.of(TEST_USER));
 
-        User resultUser = userService.getById(TEST_ID);
+        User resultUser = userService.get(TEST_ID);
 
-        verify(mockUserRepository).get(TEST_ID);
+        verify(mockUserRepository).findById(TEST_ID);
+    }
+
+    @Test
+    void get_whenUserDoesNotExist_throwsIllegalArgumentException() {
+        when(mockUserRepository.findById(TEST_ID)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.get(TEST_ID));
+    }
+
+    @Test
+    void createOrUpdate_callsSaveOnRepo_andReturnsUser() {
+        when(mockUserRepository.save(TEST_USER)).thenReturn(TEST_USER);
+
+        User resultUser = userService.createOrUpdate(TEST_USER);
+
+        verify(mockUserRepository).save(TEST_USER);
     }
 }
