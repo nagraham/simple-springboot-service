@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     public User get(String id) {
         Optional<User> userOptional = userRepository.findById(id);
         if (!userOptional.isPresent()) {
-            throw new IllegalArgumentException("User with id=" + id + " does not exist");
+            throw new ResourceNotFoundException("User with id=" + id + " does not exist");
         }
         return userOptional.get();
     }

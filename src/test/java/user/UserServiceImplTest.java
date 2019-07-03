@@ -34,10 +34,10 @@ class UserServiceImplTest {
     }
 
     @Test
-    void get_whenUserDoesNotExist_throwsIllegalArgumentException() {
+    void get_whenUserDoesNotExist_throwsResourceNotFoundException() {
         when(mockUserRepository.findById(TEST_ID)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> userService.get(TEST_ID));
+        assertThrows(ResourceNotFoundException.class, () -> userService.get(TEST_ID));
     }
 
     @Test

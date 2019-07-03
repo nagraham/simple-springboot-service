@@ -41,12 +41,9 @@ class UserRestControllerTest {
         verify(mockUserService).get(TEST_ID);
     }
 
-    // TODO: Need to implement an exception handler for my controllers
-    // https://www.baeldung.com/exception-handling-for-rest-with-spring
-    @Disabled
     @Test
-    void get_user_whenIllegalArgumentException_returns4xx() throws Exception {
-        when(mockUserService.get(TEST_ID)).thenThrow(IllegalArgumentException.class);
+    void get_user_whenResourceNotFoundException_returns4xx() throws Exception {
+        when(mockUserService.get(TEST_ID)).thenThrow(ResourceNotFoundException.class);
 
         mockMvc.perform(get("/user/" + TEST_ID))
                 .andExpect(status().is4xxClientError());

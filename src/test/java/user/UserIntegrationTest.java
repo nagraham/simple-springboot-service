@@ -39,8 +39,6 @@ public class UserIntegrationTest {
         assertThat(result.getAge(), is(expectedUser.getAge()));
     }
 
-    // TODO: Enable after exception mapping is set up
-    @Disabled
     @Test
     void get_user_whenDoesNotExist_returns4xx() {
         ResponseEntity<String> response = this.testRestTemplate.getForEntity("/user/idDoesNotExist", String.class);
