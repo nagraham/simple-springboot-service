@@ -4,11 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @DataJpaTest
@@ -25,10 +27,17 @@ class UserRepositoryTest {
     private UserRepository userRepository;
 
     /*
-     * I don't need tests for save(), findById() since the CrudRepo generates them
-     * But since this is my first time using this library, I like having these tests using an in-memory
-     * DB to validate it works as I expect it to
+     * I don't really need tests for the crud APIs since the CrudRepo generates them
+     * But since this is my first time using this library, I like having these tests
+     * to experiment and validate it works as I expect it to
      */
+
+    @Test
+    void deleteById_whenUserDoesNotExist_throwsException() {
+        assertThrows(EmptyResultDataAccessException.class, () -> {
+            userRepository.deleteById(TEST_ID);
+        });
+    }
 
     @Test
     void save_newObject_persistsTheObject() {

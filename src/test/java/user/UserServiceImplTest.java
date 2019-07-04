@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,5 +49,21 @@ class UserServiceImplTest {
         User resultUser = userService.createOrUpdate(TEST_USER);
 
         verify(mockUserRepository).save(TEST_USER);
+    }
+
+    @Test
+    void delete_callsDeleteOnUserRepository() {
+        userService.delete(TEST_ID);
+
+        verify(mockUserRepository).deleteById(TEST_ID);
+    }
+
+    @Test
+    void delete_repoThrowsEmptyResultDataAccessException_throwResourceNotFoundException() {
+        doThrow(EmptyResultDataAccessException.class)
+                .when(mockUserRepository)
+                .deleteById(TEST_ID);
+
+        assertThrows(ResourceNotFoundException.class, () -> userService.delete(TEST_ID));
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -29,6 +30,14 @@ class UserRestControllerTest {
 
     @MockBean
     private UserService mockUserService;
+
+    @Test
+    void delete_user_onSuccess_callsMockUserServiceAndReturns200() throws Exception {
+        mockMvc.perform(delete("/user/" + TEST_ID))
+                .andExpect(status().isOk());
+
+        verify(mockUserService).delete(TEST_ID);
+    }
 
     @Test
     void get_user_onSuccess_returns200_and_UserJson() throws Exception {

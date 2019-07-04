@@ -14,6 +14,11 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(path = "/user/{id}", method = RequestMethod.DELETE)
+    public void deleteUser(@PathVariable("id") String id) {
+        userService.delete(id);
+    }
+
     @RequestMapping(path = "/user/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable("id") String id) {
         return userService.get(id);

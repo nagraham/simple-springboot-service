@@ -40,12 +40,43 @@ public class UserIntegrationTest {
     }
 
     @Test
-    void get_user_whenDoesNotExist_returns4xx() {
+    void get_user_whenDoesNotExist_returns404() {
         ResponseEntity<String> response = this.testRestTemplate.getForEntity("/user/idDoesNotExist", String.class);
+        assertThat(response.getStatusCodeValue(), is(404));
+    }
+
+    @Test
+    void delete_user_whenExists_isNoLongerAvailable() {
+        putUserWithId("testUserToDeleteId");
+
+        this.testRestTemplate.delete("/user/testUserToDeleteId");
+
+        // user no longer exists
+        ResponseEntity<String> response = this.testRestTemplate.getForEntity("/user/idDoesNotExist", String.class);
+        assertThat(response.getStatusCodeValue(), is(404));
+    }
+
+    @Test
+    void delete_user_whenDoesNotExist_returns404() {
+        ResponseEntity<Void> response = this.testRestTemplate.exchange(
+                "/user/idDoesNotExist",
+                HttpMethod.DELETE,
+                null,
+                Void.class);
+
         assertThat(response.getStatusCodeValue(), is(404));
     }
 
     private User createTestUser(String id) {
         return new User(id, TEST_NAME, TEST_AGE);
+    }
+
+    private User putUserWithId(String id) {
+        User user = createTestUser(id);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<User> putHttpEntity = new HttpEntity<User>(user, httpHeaders);
+        this.testRestTemplate.exchange("/user/" + id, HttpMethod.PUT, putHttpEntity, Void.class);
+        return user;
     }
 }
