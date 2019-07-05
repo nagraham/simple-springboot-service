@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
 @RestController
 public class UserRestController {
@@ -22,6 +23,11 @@ public class UserRestController {
     @RequestMapping(path = "/user/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable("id") String id) {
         return userService.get(id);
+    }
+
+    @RequestMapping(path = "/user", method = RequestMethod.GET)
+    public List<User> getUsers() {
+        return userService.all();
     }
 
     @RequestMapping(path = "/user/{id}", method = RequestMethod.PUT)

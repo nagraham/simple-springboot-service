@@ -6,8 +6,15 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -25,6 +32,35 @@ class UserServiceImplTest {
 
     @InjectMocks
     private UserService userService = new UserServiceImpl();
+
+    @Test
+    void all_whenUsersExistInRepo_callsUserRepo_and_returnsList() {
+        Iterable<User> expectedUserList = Arrays.asList(
+                new User(TEST_ID + "_one", TEST_NAME, TEST_AGE),
+                new User(TEST_ID + "_two", TEST_NAME, TEST_AGE),
+                new User(TEST_ID + "_three", TEST_NAME, TEST_AGE)
+        );
+
+        when(mockUserRepository.findAll()).thenReturn(expectedUserList);
+
+        List<User> results = userService.all();
+
+        assertThat(results, containsInAnyOrder(
+                new User(TEST_ID + "_one", TEST_NAME, TEST_AGE),
+                new User(TEST_ID + "_two", TEST_NAME, TEST_AGE),
+                new User(TEST_ID + "_three", TEST_NAME, TEST_AGE)));
+        verify(mockUserRepository).findAll();
+    }
+
+    @Test
+    void all_whenNoUsers_callsUserRepo_and_returnsEmptyList() {
+        when(mockUserRepository.findAll()).thenReturn(new ArrayList<>());
+
+        List<User> results = userService.all();
+
+        assertThat(results, is(empty()));
+        verify(mockUserRepository).findAll();
+    }
 
     @Test
     void get_whenUserExists_callsUserRepository() {

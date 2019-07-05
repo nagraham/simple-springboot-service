@@ -22,13 +22,25 @@ Create a user
 curl -i -d '{"id":"user1234", "name": "Han Solo", "age": 32}' -H "Content-Type: application/json" -X PUT http://localhost:8080/user/user1234; echo;
 ```
 
-Get the user
+Get a user
 
 ```
 curl -i http://localhost:8080/user/user1234; echo;
 ```
 
-Delete the user
+Update a user
+
+```
+curl -i -d '{"id":"user1234", "name": "Luke Skywalker", "age": 29}' -H "Content-Type: application/json" -X PUT http://localhost:8080/user/user1234; echo;
+```
+
+Get all the users
+
+```
+curl -i http://localhost:8080/user; echo;
+```
+
+Delete a user
 
 ```
 curl -i -X DELETE http://localhost:8080/user/user1234; echo;

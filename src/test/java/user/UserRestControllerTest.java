@@ -1,13 +1,16 @@
 package user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +33,32 @@ class UserRestControllerTest {
 
     @MockBean
     private UserService mockUserService;
+
+    @Test
+    void all_whenUsersExist_returns200_and_listOfUsers() throws Exception {
+        List<User> expectedUserList = Arrays.asList(
+                new User(TEST_ID + "_one", TEST_NAME, TEST_AGE),
+                new User(TEST_ID + "_two", TEST_NAME, TEST_AGE),
+                new User(TEST_ID + "_three", TEST_NAME, TEST_AGE)
+        );
+
+        when(mockUserService.all()).thenReturn(expectedUserList);
+
+        mockMvc.perform(get("/user"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(OBJECT_MAPPER.writeValueAsString(expectedUserList)));
+
+        verify(mockUserService).all();
+    }
+
+    @Test
+    void all_whenNoUsersAvailable_returns200_and_emptyList() throws Exception {
+        when(mockUserService.all()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/user"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
 
     @Test
     void delete_user_onSuccess_callsMockUserServiceAndReturns200() throws Exception {
