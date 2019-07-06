@@ -8,7 +8,7 @@ To build the fat jar:
 mvn clean package
 ```
 
-To run the application locally:
+To run the application locally direct from the jar:
 
 ``` 
 java -jar target/simple-springboot-service-1.0-SNAPSHOT.jar
@@ -44,4 +44,22 @@ Delete a user
 
 ```
 curl -i -X DELETE http://localhost:8080/user/user1234; echo;
+```
+
+
+### Build and run local Docker container
+
+_Pre Condition: you have docker installed on your machine._
+
+From the project's root directory, package the fat jar and build the image
+
+```
+mvn clean package
+docker build -t alexandergraham/simple-springboot-service .
+```
+
+And then from any directory:
+
+```
+docker run -p 8080:8080 alexandergraham/simple-springboot-service
 ```
